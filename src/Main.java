@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import java.util.concurrent.Semaphore;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,5 +13,8 @@ public class Main {
                 (JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
+        Semaphore sem = new Semaphore(2);
+        for(int i=1;i<6;i++)
+            new Philosopher(sem,i).start();
         }
 }
