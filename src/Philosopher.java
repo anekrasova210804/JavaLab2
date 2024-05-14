@@ -3,12 +3,14 @@ import java.util.Random;
 
 public class Philosopher extends Thread {
     private final String name;
+    private final int numberOfMeals;
     private final Semaphore leftFork;
     private final Semaphore rightFork;
 
-    public Philosopher(String _name, Semaphore _leftFork, Semaphore _rightFork)
+    public Philosopher(String _name, int _numberOfMeals, Semaphore _leftFork, Semaphore _rightFork)
     {
         this.name = _name;
+        this.numberOfMeals = _numberOfMeals;
         this.leftFork = _leftFork;
         this.rightFork = _rightFork;
     }
@@ -17,9 +19,9 @@ public class Philosopher extends Thread {
     {
         try
         {
-            int num = new Random().nextInt(10);
+            int num = new Random().nextInt(1,10);
             System.out.println("Philosopher " + this.name + "  " + action +"s for "+ num +" seconds.\n");
-            Thread.sleep(num*1000);
+            Thread.sleep(num* 1000L);
         }
         catch (InterruptedException e)
         {
@@ -67,14 +69,12 @@ public class Philosopher extends Thread {
     @Override
     public void run()
     {
-        int numberOfMeals = 3;
-        while (numberOfMeals >=0) {
+        for (int i = 0; i < this.numberOfMeals; ++i) {
             this.doSomething("THINK");
             this.takeLeftFork();
             this.takeRightFork();
             this.doSomething("EAT");
             this.putDownForks();
-            numberOfMeals -=1;
         }
         System.out.println("Dinner FINISHED for Philosopher " + this.name + "!\n");
     }

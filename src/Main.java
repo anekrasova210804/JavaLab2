@@ -5,7 +5,14 @@ import java.util.concurrent.Semaphore;
 
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+
+        Semaphore[] forks = new Semaphore[5];
+        for (int i = 0; i < 5; i++) {
+            forks[i] = new Semaphore(1);
+        }
+        Philosopher[] philosophers = makePhilosopherList(forks);
+
         var frame = new JFrame();
         var icon = new ImageIcon("philosophers.png");
         var label = new JLabel(icon);
@@ -15,26 +22,20 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
 
-        Semaphore[] forks = new Semaphore[5];
-
-        for (int i = 0; i < 5; i++) {
-            forks[i] = new Semaphore(1);
-        }
-
-
-        Philosopher[] philosophers = new Philosopher[5];
-
         for (int i = 0; i <5; i++) {
-            philosophers[i] = new Philosopher(Integer.toString(i), forks[i], forks[(i + 1) % 5]);
             philosophers[i].start();
-        }
-
-        for (int i = 0; i < 5; i++)
-        {
-            philosophers[i].join();
         }
 
         System.out.println("\nDinner FINISHED for all!");
 
+    }
+
+    static Philosopher[] makePhilosopherList(Semaphore[] _forks)
+    {
+        Philosopher[] philosophers = new Philosopher[_forks.length];
+        for (int i = 0; i <5; i++) {
+            philosophers[i] = new Philosopher(Integer.toString(i), 3, _forks[i], _forks[(i + 1) % 5]);
+        }
+        return philosophers;
     }
 }
